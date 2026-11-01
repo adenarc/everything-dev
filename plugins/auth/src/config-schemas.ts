@@ -1,5 +1,6 @@
 import { DEFAULT_DEVICE_LINK_CLIENT_ID } from "better-near-auth";
 import { z } from "zod";
+import { onboardConfigSchema } from "./onboard-config";
 export const API_KEY_CONFIG_IDS = ["user-keys", "org-keys"] as const;
 
 export const subAccountNetworkSchema = z.object({
@@ -142,13 +143,16 @@ export const authVariablesSchema = z.object({
       from: z.string(),
     })
     .optional(),
+  onboard: onboardConfigSchema.optional(),
 });
 
 export const authSecretsSchema = z.object({
   AUTH_DATABASE_URL: z
     .string()
-    .default("pglite:.bos/auth/:memory:")
-    .describe("Database connection string. Use pglite: for local, postgres:// for production."),
+    .default("pglite:.bos/db")
+    .describe(
+      "Database connection string. pglite: is a persistent local data dir (.bos/db); postgres:// for production or shared access.",
+    ),
   BETTER_AUTH_SECRET: z.string(),
   GITHUB_CLIENT_SECRET: z.string().optional(),
   GOOGLE_CLIENT_SECRET: z.string().optional(),
@@ -159,6 +163,13 @@ export const authSecretsSchema = z.object({
   NEAR_RELAYER_PRIVATE_KEY_MAINNET: z.string().optional(),
   NEAR_RELAYER_PRIVATE_KEY_TESTNET: z.string().optional(),
   RESEND_API_KEY: z.string().optional(),
+  AUTH_BOOTSTRAP_ADMIN_API_KEY: z
+    .string()
+    .optional()
+    .describe(
+      "Dev/test-only: boot the instance with a platform admin + API key carrying this exact secret, " +
+        "so regression fixtures can seed through the admin routes. Never set in production.",
+    ),
 });
 
 export type AuthPluginVariables = z.infer<typeof authVariablesSchema>;
