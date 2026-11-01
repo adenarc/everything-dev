@@ -1,6 +1,7 @@
 import { DEFAULT_DEVICE_LINK_CLIENT_ID } from "better-near-auth";
 import { z } from "zod";
 import { onboardConfigSchema } from "./onboard-config";
+import { profileConfigSchema } from "./profile-config";
 export const API_KEY_CONFIG_IDS = ["user-keys", "org-keys"] as const;
 
 export const subAccountNetworkSchema = z.object({
@@ -144,6 +145,7 @@ export const authVariablesSchema = z.object({
     })
     .optional(),
   onboard: onboardConfigSchema.optional(),
+  profile: profileConfigSchema.optional(),
 });
 
 export const authSecretsSchema = z.object({

@@ -6,13 +6,13 @@ export const ONBOARD_ORGANIZATION_ID_PLACEHOLDER = "{organizationId}";
 
 const SAFE_HREF = /^(\/(?![/\\])|https:\/\/)/;
 
-const onboardHrefSchema = z
+export const appHrefSchema = z
   .string()
   .trim()
   .regex(SAFE_HREF, 'must be an app path ("/…") or an https:// URL');
 
 export const onboardLinkSchema = z.object({
-  href: onboardHrefSchema,
+  href: appHrefSchema,
   label: z.string().trim().min(1).optional(),
 });
 
@@ -31,14 +31,14 @@ export const onboardConfigSchema = z.object({
     .optional(),
   community: z
     .object({
-      url: onboardHrefSchema.refine((url) => url.startsWith("/"), "must be an app path"),
+      url: appHrefSchema.refine((url) => url.startsWith("/"), "must be an app path"),
     })
     .optional(),
 });
 
 export const onboardCommunitySchema = z.object({
   name: z.string().trim().min(1).optional(),
-  href: onboardHrefSchema.optional(),
+  href: appHrefSchema.optional(),
   channels: z
     .array(
       z.object({

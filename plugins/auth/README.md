@@ -59,8 +59,11 @@ It runs inside the **everything-plugin** framework (oRPC + Effect) and is design
 | `onboard.links.home` | `{ href, label? }` | `/dashboard`, "Go to Home" | Last link on the onboard joined screen |
 | `onboard.links.explore` | `{ href, label? }` | `/explore`, "Explore communities" | Link on the onboard error and status panels |
 | `onboard.community.url` | `string` | — | App path returning `{ name?, href?, channels?: [{ label, url }] }` for the joined organization; renders "Visit {community}" and channel links |
+| `profile.sections` | `{ id, title, description?, url }[]` | — | Up to 5 child-app sections on Settings → Profile, below the profile fields, in this order |
 
 `onboard` hrefs must be app paths (`/…`) or `https://` URLs. `links.next`, `links.home` and `community.url` replace `{organizationId}` with the joined organization's ID. A failed or invalid `community.url` response shows nothing extra.
+
+`profile.sections[].id` is kebab-case and unique; `url` is an app path the auth page fetches with the user's session. It returns `{ items: [{ title, description?, meta?, href? }], empty?, incomplete?, link?: { href, label } }` (at most 100 items; hrefs are app paths or `https://` URLs). `empty` replaces "Nothing here yet.", `incomplete` shows a note under the list, and `link` adds a link next to the section title. A failed or invalid response shows an error with Retry for that section only. An invalid `profile` config shows no sections.
 
 ### Plugin Secrets
 

@@ -22,7 +22,9 @@ import {
 import type { LoginLocale } from "@/i18n/catalogs";
 import { LoginLanguageSelector } from "@/i18n/language-selector";
 import { LoginI18nProvider } from "@/i18n/runtime";
+import type { ProfileSectionConfig } from "@/lib/profile-sections";
 import { isSyntheticEmail } from "@/lib/synthetic-email";
+import { ProfileSections } from "./profile-sections";
 
 type ProfileUser = {
   id: string;
@@ -32,7 +34,7 @@ type ProfileUser = {
   locale?: string | null;
 };
 
-export function ProfileSettings() {
+export function ProfileSettings({ sections = [] }: { sections?: ProfileSectionConfig[] }) {
   const auth = useAuthClient();
   const { data: session } = useQuery(sessionQueryOptions(auth));
   const user = session?.user;
@@ -98,6 +100,7 @@ export function ProfileSettings() {
         )}
         <DisplayNameForm key={user.name ?? ""} user={user} />
       </section>
+      <ProfileSections sections={sections} userId={user.id} />
       <LanguageSettings user={user} />
       <AccountDetails user={user} onAddEmail={() => setAddEmailOpen(true)} />
       <AddEmailDialog open={addEmailOpen} onOpenChange={setAddEmailOpen} />
